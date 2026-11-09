@@ -1,4 +1,5 @@
 import React from "react";
+import { formatDate } from "@/Lib/formatDate";
 
 const ACCENT_UPCOMING = "#2d6a4f";
 const ACCENT_PAST = "#1b2a41";
@@ -6,6 +7,8 @@ const ACCENT_PAST = "#1b2a41";
 export default function EngagementSection({ engagement, upcoming = false }) {
   const {
     title,
+    talkTitle,
+    date,
     userGroup,
     location,
     eventPage,
@@ -86,6 +89,13 @@ export default function EngagementSection({ engagement, upcoming = false }) {
           )}
         </div>
 
+        {/* TODO: add talkTitle to each entry in engagements.json */}
+        {talkTitle && (
+          <p style={{ margin: "0 0 0.35em", fontSize: "0.95rem", color: "#1b2a41" }}>
+            {talkTitle}
+          </p>
+        )}
+
         <div
           style={{
             display: "flex",
@@ -94,6 +104,11 @@ export default function EngagementSection({ engagement, upcoming = false }) {
             marginBottom: 0,
           }}
         >
+          {date && (
+            <span style={{ fontSize: "0.9rem", color: "#4b5563", fontWeight: 500 }}>
+              {formatDate(date)}
+            </span>
+          )}
           <span style={{ fontSize: "0.9rem", color: "#4b5563", fontWeight: 500 }}>
             By {userGroup.name}
           </span>

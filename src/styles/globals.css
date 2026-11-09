@@ -40,8 +40,7 @@ p {
 }
 
 .nav-bar-vertical a,
-.nav-bar-hamburger a,
-#projects a {
+.nav-bar-hamburger a {
   text-decoration: none;
   color: inherit;
 }
@@ -57,11 +56,16 @@ p {
 }
 
 .content-section {
-  padding: 3em 0;
+  padding: 4em 0 2em;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 100vh;
+  scroll-margin-top: 1em;
+}
+
+#about {
+  min-height: min(100vh, 900px);
+  padding-top: 2em;
 }
 
 #about h1 {
@@ -99,10 +103,6 @@ p {
 
 .tech-logo:hover .tech-logo-name {
   visibility: initial;
-}
-
-#projects a {
-  text-decoration: underline;
 }
 
 .form-field {
@@ -164,7 +164,16 @@ p {
     padding-top: 3em;
   }
   .content-section {
-    padding: 5em 0;
+    padding: 3em 0 1em;
+  }
+  #about {
+    min-height: auto;
+  }
+  #about h1 {
+    font-size: 2.5em !important;
+  }
+  #about h2 {
+    font-size: 1.25em !important;
   }
   #about .social-links img {
     width: 60px;

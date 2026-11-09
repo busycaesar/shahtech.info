@@ -21,7 +21,7 @@ export default function Blog() {
         <div className="bg-slate-300 p-3 rounded-xl">
           <div dangerouslySetInnerHTML={{ __html: blog.body_html }} />
         </div>
-        <Link href="/blogs">
+        <Link href="/#blog">
           <Button variant="dark" className="!text-xl my-3">
             Back
           </Button>

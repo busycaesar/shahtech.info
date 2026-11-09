@@ -1,31 +1,41 @@
 import BuyMeACoffee from "@/Components/buyMeACoffee";
+import { getLongVideos, getCertificates } from "@/Lib";
 import {
   About,
-  TechSkills,
-  WorkExperience,
+  Speaking,
+  BlogsAndVideos,
   Projects,
-  Education,
+  Certificates,
 } from "@/Sections";
 
-export default function Home() {
+const CONTENT_REFRESH_SECONDS = 3600;
+
+export const getStaticProps = async () => {
+  const [videos, certificates] = await Promise.all([
+    getLongVideos(),
+    getCertificates(),
+  ]);
+  return {
+    props: { videos, certificates },
+    revalidate: CONTENT_REFRESH_SECONDS,
+  };
+};
+
+export default function Home({ videos, certificates }) {
   return (
     <>
-      <About />
-      <hr />
-      <TechSkills />
-      <hr />
-      <WorkExperience />
-      <hr />
+      <About certificateCount={certificates.length} />
+      <Speaking />
+      <BlogsAndVideos videos={videos} />
       <Projects />
-      <hr />
-      <Education />
-      <hr />
-      <p className="flex items-center">
-        &copy; Developed with 🖤 by Dev!
-        <span className="mx-3">
-          <BuyMeACoffee />
-        </span>
-      </p>
+      <Certificates certificates={certificates} />
+      <footer
+        className="flex items-center flex-wrap"
+        style={{ gap: "1em", padding: "2em 0", borderTop: "1px solid #d6dbe3" }}
+      >
+        <p style={{ margin: 0 }}>&copy; Developed with 🖤 by Dev!</p>
+        <BuyMeACoffee />
+      </footer>
     </>
   );
 }

@@ -17,6 +17,9 @@ import { useState, useEffect } from "react";
 
 const drawerWidth = 240;
 
+export const toSectionId = (item) =>
+  item.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
 export default function DrawerAppBar(props) {
   const navBarItems = props.navBarItems || [],
     [mobileOpen, setMobileOpen] = useState(false),
@@ -49,7 +52,7 @@ export default function DrawerAppBar(props) {
           {navBarItems.map((item) => (
             <Link
               key={item}
-              href={`${urlRoot}/#${item.toLowerCase().replace(/\s+/g, "-")}`}
+              href={`${urlRoot}/#${toSectionId(item)}`}
             >
               <ListItem disablePadding>
                 <ListItemButton sx={{ textAlign: "center" }}>
@@ -108,7 +111,7 @@ export default function DrawerAppBar(props) {
             {navBarItems.map((item) => (
               <Link
                 key={item}
-                href={`${urlRoot}/#${item.toLowerCase().replace(/\s+/g, "-")}`}
+                href={`${urlRoot}/#${toSectionId(item)}`}
                 style={{
                   display: "flex",
                   alignItems: "center",

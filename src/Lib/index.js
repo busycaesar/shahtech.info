@@ -1,3 +1,5 @@
 export { getBlogs, getBlog } from "./blogs";
-export { getRepos } from "./github";
+export { getPinnedRepos } from "./github";
 export { getEngagements } from "./engagements";
+export { getCertificates } from "./readme";
+export { getLongVideos } from "./youtube";

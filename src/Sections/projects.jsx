@@ -1,12 +1,14 @@
 import React from "react";
-import ProjectSection from "@/Components/projectSection";
 import { useEffect, useState } from "react";
-import { ProjectData } from "@/Data";
+import { Row, Col, Button } from "react-bootstrap";
+import ProjectSection from "@/Components/projectSection";
+import { getPinnedRepos } from "@/Lib";
 
+// Shows the repos pinned on the GitHub profile, so pinning a repo updates the site.
 export default function Projects() {
   const [projects, setProjects] = useState([]);
   useEffect(() => {
-    ProjectData()
+    getPinnedRepos()
       .then((data) => setProjects(data))
       .catch((error) => console.log(error));
   }, []);
@@ -15,15 +17,20 @@ export default function Projects() {
       <h1>
         <strong>PROJECTS</strong>
       </h1>
-      {projects.map((project) => (
-        <ProjectSection
-          key={project.link ?? project.title}
-          title={project.title}
-          techStack={project.techStack}
-          description={project.description}
-          link={project.link}
-        />
-      ))}
+      <Row className="align-items-stretch">
+        {projects.map((project) => (
+          <Col key={project.url} lg={4} md={6} sm={12} className="mb-3 d-flex">
+            <ProjectSection {...project} />
+          </Col>
+        ))}
+      </Row>
+      <div>
+        <a href="https://github.com/busycaesar?tab=repositories" target="_blank" rel="noopener noreferrer">
+          <Button variant="dark" className="!text-lg my-2">
+            All repos on GitHub
+          </Button>
+        </a>
+      </div>
     </div>
   );
 }
