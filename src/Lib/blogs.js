@@ -1,9 +1,10 @@
-const BLOGS_NEEDED = 7;
+const BLOGS_NEEDED = 6;
+const BLOGS_API = process.env.NEXT_PUBLIC_BLOGS_URL || "https://dev.to/api";
 
 export const getBlogs = async () => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BLOGS_URL}/articles?username=busycaesar&per_page=${BLOGS_NEEDED}`,
+      `${BLOGS_API}/articles?username=busycaesar&per_page=${BLOGS_NEEDED}`,
     );
 
     if (!response.ok) {
@@ -20,7 +21,7 @@ export const getBlogs = async () => {
 export const getBlog = async (id) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BLOGS_URL}/articles/${id}`,
+      `${BLOGS_API}/articles/${id}`,
     );
 
     if (!response.ok) {
