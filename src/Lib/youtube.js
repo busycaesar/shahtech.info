@@ -1,46 +1,40 @@
 // YouTube's "UULF" playlist of a channel holds its long videos only, without Shorts.
-const LONG_VIDEOS_FEED_URL =
-  "https://www.youtube.com/feeds/videos.xml?playlist_id=UULFbswaXPWYb_ZZwmOs33jFWA";
+const LONG_VIDEOS_PLAYLIST_ID = "UULFbswaXPWYb_ZZwmOs33jFWA";
+const PLAYLIST_ITEMS_URL = "https://www.googleapis.com/youtube/v3/playlistItems";
 const VIDEOS_NEEDED = 6;
 
-const decodeXmlEntities = (text) =>
-  text
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&amp;/g, "&");
+const toVideo = ({ snippet, contentDetails }) => ({
+  id: contentDetails.videoId,
+  title: snippet.title,
+  publishedAt: contentDetails.videoPublishedAt,
+  url: `https://www.youtube.com/watch?v=${contentDetails.videoId}`,
+});
 
-const readTag = (entry, tag) => {
-  const match = entry.match(new RegExp(`<${tag}>([^<]*)</${tag}>`));
-  if (!match) throw new Error(`Missing <${tag}> in YouTube feed entry: ${entry}`);
-  return decodeXmlEntities(match[1]);
-};
-
-const parseEntry = (entry) => {
-  const id = readTag(entry, "yt:videoId");
-  return {
-    id,
-    title: readTag(entry, "title"),
-    publishedAt: readTag(entry, "published"),
-    url: `https://www.youtube.com/watch?v=${id}`,
-  };
-};
-
-// Runs on the server only: YouTube feeds do not allow browser requests.
+// Runs on the server only, so the API key never reaches the browser.
 export const getLongVideos = async () => {
-  const response = await fetch(LONG_VIDEOS_FEED_URL);
+  const apiKey = process.env.YOUTUBE_API_KEY;
+  if (!apiKey) {
+    throw new Error("YOUTUBE_API_KEY is not set. Add it to .env or the Vercel project settings.");
+  }
+
+  const params = new URLSearchParams({
+    part: "snippet,contentDetails",
+    playlistId: LONG_VIDEOS_PLAYLIST_ID,
+    maxResults: String(VIDEOS_NEEDED),
+    key: apiKey,
+  });
+  const response = await fetch(`${PLAYLIST_ITEMS_URL}?${params}`);
+  const body = await response.json();
+
+  // The request URL contains the key, so errors name the playlist instead.
   if (!response.ok) {
     throw new Error(
-      `YouTube feed ${LONG_VIDEOS_FEED_URL} returned ${response.status}`,
+      `YouTube API returned ${response.status} for playlist ${LONG_VIDEOS_PLAYLIST_ID}: ${body.error?.message}`,
     );
   }
-
-  const feed = await response.text();
-  const entries = [...feed.matchAll(/<entry>([\s\S]*?)<\/entry>/g)];
-  if (entries.length === 0) {
-    throw new Error(`No videos found in YouTube feed ${LONG_VIDEOS_FEED_URL}`);
+  if (!Array.isArray(body.items) || body.items.length === 0) {
+    throw new Error(`YouTube API returned no videos for playlist ${LONG_VIDEOS_PLAYLIST_ID}`);
   }
 
-  return entries.slice(0, VIDEOS_NEEDED).map(([, entry]) => parseEntry(entry));
+  return body.items.map(toVideo);
 };
