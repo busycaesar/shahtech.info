@@ -42,13 +42,6 @@ export default function DrawerAppBar(props) {
         </div>
         <Divider />
         <List className="nav-bar-hamburger">
-          {/* <Link href={`${urlRoot}/devbot`}>
-            <ListItem disablePadding>
-              <ListItemButton sx={{ textAlign: "center" }}>
-                <ListItemText primary={"DevBot"} />
-              </ListItemButton>
-            </ListItem>
-          </Link> */}
           {navBarItems.map((item) => (
             <Link
               key={item}
@@ -91,23 +84,6 @@ export default function DrawerAppBar(props) {
               alt="Profile Photo"
             />
             <Divider />
-            {/* <Link
-              href={`${urlRoot}/devbot`}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Button
-                sx={{
-                  color: "inherit",
-                  margin: "0.25em 0",
-                }}
-              >
-                DevBot
-              </Button>
-            </Link> */}
             {navBarItems.map((item) => (
               <Link
                 key={item}
